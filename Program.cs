@@ -8,18 +8,18 @@ namespace IssueEncryptionStreamEmpty
     {
         static void Main(string[] args)
         {
+            var encryptor = GetEncryptor();
             var text = "Under 15 characters this text causes problems";
             while (text.Length >= 0)
             {
                 text = text.Substring(0, text.Length - 1);
-                Console.WriteLine($"Result Method A with {text.Length} characters: {GetWorkingEncrypted(text)}");
-                Console.WriteLine($"Result Method B with {text.Length} characters: {GetNonWorkingEncrypted(text)}");
+                Console.WriteLine($"Result Method A with {text.Length} characters: {GetWorkingEncrypted(text, encryptor)}");
+                Console.WriteLine($"Result Method B with {text.Length} characters: {GetNonWorkingEncrypted(text, encryptor)}");
             }
         }
 
-        private static string GetWorkingEncrypted(string text)
+        private static string GetWorkingEncrypted(string text, ICryptoTransform encryptor)
         {
-            var encryptor = GetEncryptor();
             using var memoryStream = new MemoryStream();
             using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
             {
@@ -36,9 +36,8 @@ namespace IssueEncryptionStreamEmpty
             return encryptedText;
         }
         
-        private static string GetNonWorkingEncrypted(string text)
+        private static string GetNonWorkingEncrypted(string text, ICryptoTransform encryptor)
         {
-            var encryptor = GetEncryptor();
             using var memoryStream = new MemoryStream();
             using var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
             using var writer = new StreamWriter(cryptoStream);
