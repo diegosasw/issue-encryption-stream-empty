@@ -25,6 +25,7 @@ namespace IssueEncryptionStreamEmpty
             {
                 using var writer = new StreamWriter(cryptoStream);
                 writer.Write(text);
+                writer.Flush();
             }
 
             var encryptedData = memoryStream.ToArray();
